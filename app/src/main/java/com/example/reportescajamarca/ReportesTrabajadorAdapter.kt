@@ -15,7 +15,8 @@ import java.util.*
 
 class ReportesTrabajadorAdapter(
     private val reportes: List<Reporte>,
-    private val onEditarClick: (Reporte) -> Unit
+    private val onEditarClick: (Reporte) -> Unit,
+    private val onChatClick: (Reporte) -> Unit
 ) : RecyclerView.Adapter<ReportesTrabajadorAdapter.ReporteViewHolder>() {
 
     class ReporteViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -29,6 +30,7 @@ class ReportesTrabajadorAdapter(
         val tvDescripcion: TextView = view.findViewById(R.id.tvDescripcion)
         val ivFotoReporte: ImageView = view.findViewById(R.id.ivFotoReporte)
         val btnCambiarEstado: Button = view.findViewById(R.id.btnCambiarEstado)
+        val btnChat: Button = view.findViewById(R.id.btnChat)  // ⭐ NUEVO BOTÓN
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReporteViewHolder {
@@ -60,7 +62,7 @@ class ReportesTrabajadorAdapter(
             else -> holder.tvEstado.setTextColor(Color.parseColor("#666666"))
         }
 
-        // NUEVO: Cargar imagen con Glide
+        // Cargar imagen con Glide
         if (reporte.fotoUrl.isNotEmpty()) {
             Glide.with(holder.itemView.context)
                 .load(reporte.fotoUrl)
@@ -76,6 +78,11 @@ class ReportesTrabajadorAdapter(
         // Botón para cambiar estado
         holder.btnCambiarEstado.setOnClickListener {
             onEditarClick(reporte)
+        }
+
+        // ⭐ NUEVO: Botón para abrir chat
+        holder.btnChat.setOnClickListener {
+            onChatClick(reporte)
         }
     }
 

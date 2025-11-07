@@ -117,15 +117,37 @@
             android:ellipsize="end"
             android:layout_marginBottom="16dp"/>
 
-        <!-- Botón Cambiar Estado -->
-        <Button
-            android:id="@+id/btnCambiarEstado"
+        <!-- ⭐ NUEVO: Botones de acción -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="CAMBIAR ESTADO"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:backgroundTint="#1976D2"/>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <!-- Botón Chat -->
+            <Button
+                android:id="@+id/btnChat"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="💬 CHAT"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:backgroundTint="#4CAF50"/>
+
+            <!-- Botón Cambiar Estado -->
+            <Button
+                android:id="@+id/btnCambiarEstado"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="CAMBIAR ESTADO"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:backgroundTint="#1976D2"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -1,7 +1,8 @@
 package com.example.reportescajamarca
 
+
 data class Reporte(
-    val id: String = "",
+    var id: String = "",
     val tipoIncidente: String = "",
     val titulo: String = "",
     val descripcion: String = "",
@@ -13,5 +14,5 @@ data class Reporte(
     val longitud: Double = 0.0,
     val usuarioId: String = "",
     val numFotos: Int = 0,
-    val fotoUrl: String = "" // URL de la primera foto
+    val fotoUrl: String = ""
 )

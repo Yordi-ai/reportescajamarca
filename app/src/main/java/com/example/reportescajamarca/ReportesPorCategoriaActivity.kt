@@ -1,5 +1,6 @@
 package com.example.reportescajamarca
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -35,12 +36,27 @@ class ReportesPorCategoriaActivity : AppCompatActivity() {
     }
 
     private fun configurarRecyclerView() {
-        adapter = ReportesTrabajadorAdapter(reportesList) { reporte ->
-            // Callback para editar estado del reporte
-            mostrarDialogoEditar(reporte)
-        }
+        adapter = ReportesTrabajadorAdapter(
+            reportesList,
+            onEditarClick = { reporte ->
+                // Callback para editar estado del reporte
+                mostrarDialogoEditar(reporte)
+            },
+            onChatClick = { reporte ->
+                // ⭐ NUEVO: Callback para abrir chat
+                abrirChat(reporte)
+            }
+        )
         binding.recyclerViewReportes.layoutManager = LinearLayoutManager(this)
         binding.recyclerViewReportes.adapter = adapter
+    }
+
+    // ⭐ NUEVA FUNCIÓN: Abrir chat
+    private fun abrirChat(reporte: Reporte) {
+        val intent = Intent(this, ChatActivity::class.java)
+        intent.putExtra("REPORTE_ID", reporte.id)
+        intent.putExtra("REPORTE_TITULO", reporte.titulo)
+        startActivity(intent)
     }
 
     private fun configurarFiltros() {
@@ -186,4 +202,3 @@ class ReportesPorCategoriaActivity : AppCompatActivity() {
         return true
     }
 }
-

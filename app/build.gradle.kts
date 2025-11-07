@@ -52,9 +52,13 @@ dependencies {
     // CardView
     implementation("androidx.cardview:cardview:1.0.0")
 
+    // RecyclerView
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+
     // Firebase
     implementation("com.google.firebase:firebase-auth:23.1.0")
     implementation("com.google.firebase:firebase-firestore:25.1.1")
+    implementation("com.google.firebase:firebase-database:21.0.0") // ⭐ AGREGADO para el chat
     implementation("com.google.firebase:firebase-storage:21.0.1")
 
     // Google Play Services - Location
@@ -63,8 +67,11 @@ dependencies {
     // OpenStreetMap - GRATIS, sin API Key
     implementation("org.osmdroid:osmdroid-android:6.1.18")
 
+    // Glide para cargar imágenes
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0") // ⭐ AGREGADO
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    implementation("com.github.bumptech.glide:glide:4.16.0")
 }
