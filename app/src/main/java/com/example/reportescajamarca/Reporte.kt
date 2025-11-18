@@ -15,5 +15,6 @@ data class Reporte(
     val usuarioId: String = "",
     val numFotos: Int = 0,
     val fotoUrl: String = "",
-    val vistoPor: List<String> = emptyList()  // ⭐ NUEVO: IDs de trabajadores que ya vieron
+    val vistoPor: List<String> = emptyList(),
+    val mensajesNoLeidos: Int = 0  // ⭐ Campo para badge
 )

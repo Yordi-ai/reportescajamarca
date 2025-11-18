@@ -14,17 +14,17 @@
         <!-- Header con gradiente azul -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="280dp"
+            android:layout_height="220dp"
             android:background="#1976D2"
-            android:padding="24dp">
+            android:padding="20dp">
 
             <!-- Logo -->
             <ImageView
                 android:id="@+id/ivLogo"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:src="@drawable/ic_launcher_foreground"
                 android:background="@android:color/white"
                 android:elevation="4dp"/>
@@ -36,9 +36,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/ivLogo"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="8dp"
                 android:text="Reportes Urbanos"
-                android:textSize="24sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"/>
 
@@ -49,7 +49,7 @@
                 android:layout_below="@id/tvAppTitle"
                 android:layout_centerHorizontal="true"
                 android:text="Cajamarca"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textColor="#CCFFFFFF"/>
 
         </RelativeLayout>
@@ -58,9 +58,9 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginTop="-60dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="-50dp"
             app:cardCornerRadius="12dp"
             app:cardElevation="8dp">
 
@@ -68,14 +68,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="24dp"
+                android:padding="16dp"
                 android:gravity="center">
 
                 <!-- Foto de perfil circular -->
                 <androidx.cardview.widget.CardView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    app:cardCornerRadius="50dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    app:cardCornerRadius="40dp"
                     app:cardElevation="4dp">
 
                     <ImageView
@@ -92,9 +92,9 @@
                     android:id="@+id/tvNombreUsuario"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="12dp"
                     android:text="Usuario"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#333333"/>
 
@@ -105,56 +105,59 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="usuario@ejemplo.com"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textColor="#666666"/>
 
                 <!-- Separador -->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
                     android:background="#E0E0E0"/>
 
-                <!-- Estadísticas con 5 valores en 2 filas -->
+                <!-- Estadísticas: Total arriba, 4 estados abajo -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <!-- Primera fila: Total, Pendientes, En Proceso -->
+                    <!-- TOTAL destacado -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="12dp"
+                        android:background="#E3F2FD"
+                        android:layout_marginBottom="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="TOTAL DE REPORTES"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:textColor="#666666"
+                            android:letterSpacing="0.1"/>
+
+                        <TextView
+                            android:id="@+id/tvTotalReportes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="0"
+                            android:textSize="36sp"
+                            android:textStyle="bold"
+                            android:textColor="#1976D2"/>
+                    </LinearLayout>
+
+                    <!-- Fila de 4 estados -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:gravity="center"
-                        android:layout_marginBottom="12dp">
-
-                        <!-- Total reportes -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center"
-                            android:padding="8dp">
-
-                            <TextView
-                                android:id="@+id/tvTotalReportes"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0"
-                                android:textSize="22sp"
-                                android:textStyle="bold"
-                                android:textColor="#1976D2"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Total"
-                                android:textSize="11sp"
-                                android:textColor="#999999"/>
-                        </LinearLayout>
+                        android:gravity="center">
 
                         <!-- Pendientes -->
                         <LinearLayout
@@ -163,14 +166,14 @@
                             android:layout_weight="1"
                             android:orientation="vertical"
                             android:gravity="center"
-                            android:padding="8dp">
+                            android:padding="6dp">
 
                             <TextView
                                 android:id="@+id/tvReportesPendientes"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0"
-                                android:textSize="22sp"
+                                android:textSize="18sp"
                                 android:textStyle="bold"
                                 android:textColor="#FF9800"/>
 
@@ -178,8 +181,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Pendientes"
-                                android:textSize="11sp"
-                                android:textColor="#999999"/>
+                                android:textSize="9sp"
+                                android:textColor="#999999"
+                                android:textAlignment="center"/>
                         </LinearLayout>
 
                         <!-- En Proceso -->
@@ -189,14 +193,14 @@
                             android:layout_weight="1"
                             android:orientation="vertical"
                             android:gravity="center"
-                            android:padding="8dp">
+                            android:padding="6dp">
 
                             <TextView
                                 android:id="@+id/tvReportesEnProceso"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0"
-                                android:textSize="22sp"
+                                android:textSize="18sp"
                                 android:textStyle="bold"
                                 android:textColor="#2196F3"/>
 
@@ -204,17 +208,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="En Proceso"
-                                android:textSize="11sp"
-                                android:textColor="#999999"/>
+                                android:textSize="9sp"
+                                android:textColor="#999999"
+                                android:textAlignment="center"/>
                         </LinearLayout>
-                    </LinearLayout>
-
-                    <!-- Segunda fila: Resueltos, Rechazados -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center">
 
                         <!-- Resueltos -->
                         <LinearLayout
@@ -223,14 +220,14 @@
                             android:layout_weight="1"
                             android:orientation="vertical"
                             android:gravity="center"
-                            android:padding="8dp">
+                            android:padding="6dp">
 
                             <TextView
                                 android:id="@+id/tvReportesResueltos"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0"
-                                android:textSize="22sp"
+                                android:textSize="18sp"
                                 android:textStyle="bold"
                                 android:textColor="#4CAF50"/>
 
@@ -238,8 +235,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Resueltos"
-                                android:textSize="11sp"
-                                android:textColor="#999999"/>
+                                android:textSize="9sp"
+                                android:textColor="#999999"
+                                android:textAlignment="center"/>
                         </LinearLayout>
 
                         <!-- Rechazados -->
@@ -249,14 +247,14 @@
                             android:layout_weight="1"
                             android:orientation="vertical"
                             android:gravity="center"
-                            android:padding="8dp">
+                            android:padding="6dp">
 
                             <TextView
                                 android:id="@+id/tvReportesRechazados"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0"
-                                android:textSize="22sp"
+                                android:textSize="18sp"
                                 android:textStyle="bold"
                                 android:textColor="#F44336"/>
 
@@ -264,31 +262,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Rechazados"
-                                android:textSize="11sp"
-                                android:textColor="#999999"/>
-                        </LinearLayout>
-
-                        <!-- Espacio vacío para centrar -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center"
-                            android:padding="8dp"
-                            android:visibility="invisible">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0"
-                                android:textSize="22sp"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="."
-                                android:textSize="11sp"/>
+                                android:textSize="9sp"
+                                android:textColor="#999999"
+                                android:textAlignment="center"/>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -301,31 +277,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="20dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Acciones rápidas"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 android:textColor="#333333"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="12dp"/>
 
             <!-- Botón Crear Reporte -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="10dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp">
 
                 <Button
                     android:id="@+id/btnNewReport"
                     android:layout_width="match_parent"
-                    android:layout_height="64dp"
+                    android:layout_height="56dp"
                     android:text="📝 CREAR NUEVO REPORTE"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:textStyle="bold"
                     android:backgroundTint="#1976D2"/>
             </androidx.cardview.widget.CardView>
@@ -334,16 +310,16 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="10dp"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="4dp">
 
                 <Button
                     android:id="@+id/btnMisReportes"
                     android:layout_width="match_parent"
-                    android:layout_height="64dp"
+                    android:layout_height="56dp"
                     android:text="📋 MIS REPORTES"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:textStyle="bold"
                     android:backgroundTint="#4CAF50"/>
             </androidx.cardview.widget.CardView>
@@ -352,10 +328,10 @@
             <Button
                 android:id="@+id/btnLogout"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="24dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="16dp"
                 android:text="Cerrar Sesión"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:backgroundTint="#666666"
                 style="?attr/borderlessButtonStyle"/>
 

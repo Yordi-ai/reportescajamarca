@@ -1,5 +1,6 @@
 package com.example.reportescajamarca
 
+
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -28,14 +29,13 @@ class MisReportesActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         initRecyclerView()
-        cargarReportes()
+        cargarReportesConMensajes()
     }
 
     private fun initRecyclerView() {
         recyclerView = findViewById(R.id.recyclerViewReportes)
 
         adapter = ReporteAdapter(reportes) { reporte ->
-            // Cuando se hace click en el botón de chat
             abrirChat(reporte)
         }
 
@@ -50,30 +50,68 @@ class MisReportesActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun cargarReportes() {
+    private fun cargarReportesConMensajes() {
         val currentUser = auth.currentUser ?: return
 
         db.collection("reportes")
             .whereEqualTo("usuarioId", currentUser.uid)
-            .get()
-            .addOnSuccessListener { documents ->
-                reportes.clear()
+            .addSnapshotListener { documents, error ->
+                if (error != null) {
+                    return@addSnapshotListener
+                }
+
+                if (documents == null || documents.isEmpty) {
+                    reportes.clear()
+                    adapter.notifyDataSetChanged()
+                    return@addSnapshotListener
+                }
+
+                val nuevosReportes = mutableListOf<Reporte>()
 
                 for (document in documents) {
                     val reporte = document.toObject(Reporte::class.java)
                     reporte.id = document.id
-                    reportes.add(reporte)
+                    nuevosReportes.add(reporte)
                 }
 
+                reportes.clear()
+                reportes.addAll(nuevosReportes)
+                reportes.sortByDescending { it.fecha }
                 adapter.notifyDataSetChanged()
+
+                reportes.forEachIndexed { index, reporte ->
+                    contarMensajesNoLeidos(reporte.id) { contador ->
+                        reportes[index] = reporte.copy(mensajesNoLeidos = contador)
+                        adapter.notifyItemChanged(index)
+                    }
+                }
             }
-            .addOnFailureListener { exception ->
-                // Manejar error
+    }
+
+    private fun contarMensajesNoLeidos(reporteId: String, callback: (Int) -> Unit) {
+        val currentUser = auth.currentUser ?: return callback(0)
+
+        db.collection("reportes")
+            .document(reporteId)
+            .collection("mensajes")
+            .whereEqualTo("leido", false)
+            .whereNotEqualTo("usuarioId", currentUser.uid)
+            .get()
+            .addOnSuccessListener { mensajes ->
+                callback(mensajes.size())
+            }
+            .addOnFailureListener {
+                callback(0)
             }
     }
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        cargarReportesConMensajes()
     }
 }
