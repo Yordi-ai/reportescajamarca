@@ -3,9 +3,11 @@ package com.example.reportescajamarca
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.reportescajamarca.databinding.ActivityReportesPorCategoriaBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
@@ -39,19 +41,20 @@ class ReportesPorCategoriaActivity : AppCompatActivity() {
         adapter = ReportesTrabajadorAdapter(
             reportesList,
             onEditarClick = { reporte ->
-                // Callback para editar estado del reporte
                 mostrarDialogoEditar(reporte)
             },
             onChatClick = { reporte ->
-                // ⭐ NUEVO: Callback para abrir chat
                 abrirChat(reporte)
+            },
+            onReporteVisto = { reporte ->
+                // ⭐ NUEVO: Marcar reporte como visto
+                marcarReporteComoVisto(reporte)
             }
         )
         binding.recyclerViewReportes.layoutManager = LinearLayoutManager(this)
         binding.recyclerViewReportes.adapter = adapter
     }
 
-    // ⭐ NUEVA FUNCIÓN: Abrir chat
     private fun abrirChat(reporte: Reporte) {
         val intent = Intent(this, ChatActivity::class.java)
         intent.putExtra("REPORTE_ID", reporte.id)
@@ -86,13 +89,11 @@ class ReportesPorCategoriaActivity : AppCompatActivity() {
     }
 
     private fun actualizarBotonesFiltro() {
-        // Resetear todos los botones
         binding.btnTodos.alpha = 0.5f
         binding.btnPendientes.alpha = 0.5f
         binding.btnEnProceso.alpha = 0.5f
         binding.btnResueltos.alpha = 0.5f
 
-        // Resaltar el botón activo
         when (filtroEstado) {
             "Todos" -> binding.btnTodos.alpha = 1.0f
             "Pendiente" -> binding.btnPendientes.alpha = 1.0f
@@ -113,7 +114,6 @@ class ReportesPorCategoriaActivity : AppCompatActivity() {
             .whereEqualTo("tipoIncidente", categoria)
             .orderBy("fecha", Query.Direction.DESCENDING)
 
-        // Aplicar filtro de estado si no es "Todos"
         if (filtroEstado != "Todos") {
             query = query.whereEqualTo("estado", filtroEstado)
         }
@@ -135,6 +135,9 @@ class ReportesPorCategoriaActivity : AppCompatActivity() {
                         android.util.Log.d("ReportesCategoria", "  - Tipo: ${document.getString("tipoIncidente")}")
                         android.util.Log.d("ReportesCategoria", "  - Estado: ${document.getString("estado")}")
 
+                        // ⭐ NUEVO: Obtener lista de vistoPor
+                        val vistoPorList = document.get("vistoPor") as? List<String> ?: emptyList()
+
                         val reporte = Reporte(
                             id = document.id,
                             tipoIncidente = document.getString("tipoIncidente") ?: "",
@@ -148,7 +151,8 @@ class ReportesPorCategoriaActivity : AppCompatActivity() {
                             longitud = document.getDouble("longitud") ?: 0.0,
                             usuarioId = document.getString("usuarioId") ?: "",
                             numFotos = document.getLong("numFotos")?.toInt() ?: 0,
-                            fotoUrl = document.getString("fotoUrl") ?: ""
+                            fotoUrl = document.getString("fotoUrl") ?: "",
+                            vistoPor = vistoPorList  // ⭐ NUEVO
                         )
                         reportesList.add(reporte)
                     }
@@ -181,19 +185,68 @@ class ReportesPorCategoriaActivity : AppCompatActivity() {
         db.collection("reportes").document(reporteId)
             .update("estado", nuevoEstado)
             .addOnSuccessListener {
-                android.widget.Toast.makeText(
-                    this,
-                    "Estado actualizado a: $nuevoEstado",
-                    android.widget.Toast.LENGTH_SHORT
-                ).show()
-                cargarReportes() // Recargar la lista
+                Toast.makeText(this, "Estado actualizado a: $nuevoEstado", Toast.LENGTH_SHORT).show()
+                enviarNotificacionCambioEstado(reporteId, nuevoEstado)
+                cargarReportes()
             }
             .addOnFailureListener { e ->
-                android.widget.Toast.makeText(
-                    this,
-                    "Error al actualizar: ${e.message}",
-                    android.widget.Toast.LENGTH_LONG
-                ).show()
+                Toast.makeText(this, "Error al actualizar: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+    }
+
+    private fun enviarNotificacionCambioEstado(reporteId: String, nuevoEstado: String) {
+        db.collection("reportes").document(reporteId).get()
+            .addOnSuccessListener { document ->
+                val usuarioId = document.getString("usuarioId") ?: return@addOnSuccessListener
+                val titulo = document.getString("titulo") ?: "Tu reporte"
+
+                db.collection("usuarios").document(usuarioId).get()
+                    .addOnSuccessListener { userDoc ->
+                        val fcmToken = userDoc.getString("fcmToken") ?: return@addOnSuccessListener
+
+                        val emoji = when (nuevoEstado) {
+                            "En Proceso" -> "🔧"
+                            "Resuelto" -> "✅"
+                            "Rechazado" -> "❌"
+                            else -> "📋"
+                        }
+
+                        val notificacion = hashMapOf(
+                            "to" to fcmToken,
+                            "notification" to hashMapOf(
+                                "title" to "$emoji Estado actualizado",
+                                "body" to "\"$titulo\" ahora está: $nuevoEstado"
+                            ),
+                            "data" to hashMapOf(
+                                "tipo" to "cambio_estado",
+                                "reporteId" to reporteId,
+                                "estado" to nuevoEstado
+                            )
+                        )
+
+                        db.collection("notificaciones_pendientes").add(notificacion)
+                    }
+            }
+    }
+
+    // ⭐ NUEVA FUNCIÓN: Marcar reporte como visto por el trabajador
+    private fun marcarReporteComoVisto(reporte: Reporte) {
+        val trabajadorId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        if (reporte.vistoPor.contains(trabajadorId)) {
+            return
+        }
+
+        val vistoPorActualizado = reporte.vistoPor.toMutableList()
+        vistoPorActualizado.add(trabajadorId)
+
+        db.collection("reportes").document(reporte.id)
+            .update("vistoPor", vistoPorActualizado)
+            .addOnSuccessListener {
+                android.util.Log.d("ReportesCategoria", "Reporte ${reporte.id} marcado como visto")
+            }
+            .addOnFailureListener { e ->
+                android.util.Log.e("ReportesCategoria", "Error al marcar como visto: ${e.message}")
             }
     }
 

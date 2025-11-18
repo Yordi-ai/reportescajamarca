@@ -14,5 +14,6 @@ data class Reporte(
     val longitud: Double = 0.0,
     val usuarioId: String = "",
     val numFotos: Int = 0,
-    val fotoUrl: String = ""
+    val fotoUrl: String = "",
+    val vistoPor: List<String> = emptyList()  // ⭐ NUEVO: IDs de trabajadores que ya vieron
 )

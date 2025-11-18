@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import com.example.reportescajamarca.databinding.ActivityLoginBinding
 
 class LoginActivity : AppCompatActivity() {
@@ -34,6 +35,9 @@ class LoginActivity : AppCompatActivity() {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
+                        // ⭐ Guardar token FCM
+                        guardarTokenFCM()
+
                         // Obtener tipo de usuario de Firestore
                         val userId = auth.currentUser?.uid
                         userId?.let {
@@ -66,6 +70,28 @@ class LoginActivity : AppCompatActivity() {
 
         binding.tvRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
+        }
+    }
+
+    // ⭐ NUEVA FUNCIÓN: Guardar token FCM
+    private fun guardarTokenFCM() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+                val userId = auth.currentUser?.uid ?: return@addOnCompleteListener
+
+                // Guardar token en Firestore
+                db.collection("usuarios")
+                    .document(userId)
+                    .set(
+                        hashMapOf(
+                            "fcmToken" to token,
+                            "email" to auth.currentUser?.email,
+                            "ultimaActualizacion" to System.currentTimeMillis()
+                        ),
+                        com.google.firebase.firestore.SetOptions.merge()
+                    )
+            }
         }
     }
 }

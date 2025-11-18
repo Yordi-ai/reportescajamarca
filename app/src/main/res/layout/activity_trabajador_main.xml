@@ -40,7 +40,6 @@
         android:textAlignment="center"
         android:layout_marginBottom="32dp"/>
 
-    <!-- Categorías de Incidentes -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,87 +59,285 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <Button
-                android:id="@+id/btnBaches"
+            <!-- Baches en Calle con Badge -->
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="Baches en Calle"
-                android:textSize="16sp"
-                android:backgroundTint="#FF5722"
-                android:layout_marginBottom="12dp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp">
 
-            <Button
-                android:id="@+id/btnAlumbrado"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="Alumbrado Público"
-                android:textSize="16sp"
-                android:backgroundTint="#FFC107"
-                android:layout_marginBottom="12dp"/>
+                <Button
+                    android:id="@+id/btnBaches"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Baches en Calle"
+                    android:textSize="16sp"
+                    android:backgroundTint="#FF5722"/>
 
-            <Button
-                android:id="@+id/btnSenalizacion"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="Señalización"
-                android:textSize="16sp"
-                android:backgroundTint="#2196F3"
-                android:layout_marginBottom="12dp"/>
+                <TextView
+                    android:id="@+id/badgeBaches"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="end|top"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/badge_background"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:elevation="8dp"
+                    android:visibility="gone"/>
+            </FrameLayout>
 
-            <Button
-                android:id="@+id/btnBasura"
+            <!-- Alumbrado Público con Badge -->
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="Basura y Limpieza"
-                android:textSize="16sp"
-                android:backgroundTint="#4CAF50"
-                android:layout_marginBottom="12dp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp">
 
-            <Button
-                android:id="@+id/btnMobiliario"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="Mobiliario Urbano"
-                android:textSize="16sp"
-                android:backgroundTint="#9C27B0"
-                android:layout_marginBottom="12dp"/>
+                <Button
+                    android:id="@+id/btnAlumbrado"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Alumbrado Público"
+                    android:textSize="16sp"
+                    android:backgroundTint="#FFC107"/>
 
-            <Button
-                android:id="@+id/btnParques"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="Parques y Jardines"
-                android:textSize="16sp"
-                android:backgroundTint="#009688"
-                android:layout_marginBottom="12dp"/>
+                <TextView
+                    android:id="@+id/badgeAlumbrado"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="end|top"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/badge_background"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:elevation="8dp"
+                    android:visibility="gone"/>
+            </FrameLayout>
 
-            <Button
-                android:id="@+id/btnAgua"
+            <!-- Señalización con Badge -->
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="Agua y Drenaje"
-                android:textSize="16sp"
-                android:backgroundTint="#03A9F4"
-                android:layout_marginBottom="12dp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp">
 
-            <Button
-                android:id="@+id/btnOtros"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="Otros Incidentes"
-                android:textSize="16sp"
-                android:backgroundTint="#607D8B"
-                android:layout_marginBottom="12dp"/>
+                <Button
+                    android:id="@+id/btnSenalizacion"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Señalización"
+                    android:textSize="16sp"
+                    android:backgroundTint="#2196F3"/>
 
-            <Button
-                android:id="@+id/btnEmergencias"
+                <TextView
+                    android:id="@+id/badgeSenalizacion"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="end|top"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/badge_background"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:elevation="8dp"
+                    android:visibility="gone"/>
+            </FrameLayout>
+
+            <!-- Basura y Limpieza con Badge -->
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="EMERGENCIAS"
-                android:textSize="16sp"
-                android:backgroundTint="#F44336"
-                android:textStyle="bold"
-                android:layout_marginBottom="12dp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp">
+
+                <Button
+                    android:id="@+id/btnBasura"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Basura y Limpieza"
+                    android:textSize="16sp"
+                    android:backgroundTint="#4CAF50"/>
+
+                <TextView
+                    android:id="@+id/badgeBasura"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="end|top"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/badge_background"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:elevation="8dp"
+                    android:visibility="gone"/>
+            </FrameLayout>
+
+            <!-- Mobiliario Urbano con Badge -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp">
+
+                <Button
+                    android:id="@+id/btnMobiliario"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Mobiliario Urbano"
+                    android:textSize="16sp"
+                    android:backgroundTint="#9C27B0"/>
+
+                <TextView
+                    android:id="@+id/badgeMobiliario"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="end|top"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/badge_background"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:elevation="8dp"
+                    android:visibility="gone"/>
+            </FrameLayout>
+
+            <!-- Parques y Jardines con Badge -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp">
+
+                <Button
+                    android:id="@+id/btnParques"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Parques y Jardines"
+                    android:textSize="16sp"
+                    android:backgroundTint="#009688"/>
+
+                <TextView
+                    android:id="@+id/badgeParques"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="end|top"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/badge_background"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:elevation="8dp"
+                    android:visibility="gone"/>
+            </FrameLayout>
+
+            <!-- Agua y Drenaje con Badge -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp">
+
+                <Button
+                    android:id="@+id/btnAgua"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Agua y Drenaje"
+                    android:textSize="16sp"
+                    android:backgroundTint="#03A9F4"/>
+
+                <TextView
+                    android:id="@+id/badgeAgua"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="end|top"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/badge_background"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:elevation="8dp"
+                    android:visibility="gone"/>
+            </FrameLayout>
+
+            <!-- Otros Incidentes con Badge -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp">
+
+                <Button
+                    android:id="@+id/btnOtros"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Otros Incidentes"
+                    android:textSize="16sp"
+                    android:backgroundTint="#607D8B"/>
+
+                <TextView
+                    android:id="@+id/badgeOtros"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="end|top"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/badge_background"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:elevation="8dp"
+                    android:visibility="gone"/>
+            </FrameLayout>
+
+            <!-- EMERGENCIAS con Badge -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp">
+
+                <Button
+                    android:id="@+id/btnEmergencias"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="EMERGENCIAS"
+                    android:textSize="16sp"
+                    android:backgroundTint="#F44336"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/badgeEmergencias"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="end|top"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/badge_background"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:elevation="8dp"
+                    android:visibility="gone"/>
+            </FrameLayout>
 
         </LinearLayout>
     </ScrollView>

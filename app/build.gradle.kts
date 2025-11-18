@@ -60,6 +60,9 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore:25.1.1")
     implementation("com.google.firebase:firebase-database:21.0.0") // ⭐ AGREGADO para el chat
     implementation("com.google.firebase:firebase-storage:21.0.1")
+    implementation("com.google.firebase:firebase-messaging:23.4.0")  // ⭐ NUEVA
+    implementation("androidx.work:work-runtime-ktx:2.9.0")  // ⭐ NUEVA
+
 
     // Google Play Services - Location
     implementation("com.google.android.gms:play-services-location:21.3.0")

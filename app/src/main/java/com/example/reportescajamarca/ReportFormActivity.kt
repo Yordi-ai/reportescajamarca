@@ -390,15 +390,54 @@ class ReportFormActivity : AppCompatActivity() {
         )
 
         db.collection("reportes").add(reporte)
+            .addOnSuccessListener { documentReference ->
+                // ⭐ NUEVO: Enviar notificación a trabajadores
+                enviarNotificacionNuevoReporte(documentReference.id, titulo, tipoIncidente)
 
-        Toast.makeText(this, "✅ Reporte enviado exitosamente", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "✅ Reporte enviado exitosamente", Toast.LENGTH_SHORT).show()
 
-        binding.root.postDelayed({
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
-            finish()
-        }, 500)
+                binding.root.postDelayed({
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                    finish()
+                }, 500)
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Error al enviar: ${e.message}", Toast.LENGTH_LONG).show()
+                binding.btnEnviarReporte.isEnabled = true
+                binding.btnEnviarReporte.text = "Enviar Reporte"
+            }
+    }
+
+    // ⭐ NUEVA FUNCIÓN: Notificar a trabajadores sobre nuevo reporte
+    private fun enviarNotificacionNuevoReporte(reporteId: String, titulo: String, categoria: String) {
+        // Buscar trabajadores
+        db.collection("usuarios")
+            .whereEqualTo("tipoUsuario", "trabajador")
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    val fcmToken = document.getString("fcmToken") ?: continue
+
+                    // Crear notificación
+                    val notificacion = hashMapOf(
+                        "to" to fcmToken,
+                        "notification" to hashMapOf(
+                            "title" to "🔔 Nuevo Reporte: $categoria",
+                            "body" to titulo
+                        ),
+                        "data" to hashMapOf(
+                            "tipo" to "nuevo_reporte",
+                            "reporteId" to reporteId,
+                            "categoria" to categoria
+                        )
+                    )
+
+                    // Guardar para procesar
+                    db.collection("notificaciones_pendientes").add(notificacion)
+                }
+            }
     }
 
     private fun guardarBorrador() {

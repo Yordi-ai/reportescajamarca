@@ -11,6 +11,7 @@
         android:maxSdkVersion="32"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/> <!-- ⭐ NUEVO -->
 
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
 
@@ -55,7 +56,6 @@
             android:name=".MisReportesActivity"
             android:exported="false" />
 
-        <!-- NUEVAS ACTIVITIES PARA TRABAJADORES -->
         <activity
             android:name=".TrabajadorMainActivity"
             android:exported="false" />
@@ -64,13 +64,21 @@
             android:name=".ReportesPorCategoriaActivity"
             android:exported="false" />
 
-        <!-- ⭐ NUEVA ACTIVITY PARA EL CHAT -->
         <activity
             android:name=".ChatActivity"
             android:exported="false"
             android:parentActivityName=".MisReportesActivity"
             android:label="Chat"
             android:windowSoftInputMode="adjustResize" />
+
+        <!-- ⭐ SERVICIO DE NOTIFICACIONES FCM -->
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -1,7 +1,7 @@
 package com.example.reportescajamarca
 
 
-
+import com.google.firebase.firestore.FirebaseFirestore
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -128,7 +128,7 @@ class ChatActivity : AppCompatActivity() {
 
         val messageId = database.child("chats").child(reporteId).push().key ?: return
 
-        // ⭐ Detectar automáticamente si es trabajador o ciudadano
+        // Detectar automáticamente si es trabajador o ciudadano
         val userType = if (currentUser.email?.contains("trabajador") == true ||
             currentUser.email?.contains("municipalidad") == true) {
             "municipalidad"
@@ -141,7 +141,7 @@ class ChatActivity : AppCompatActivity() {
             reporteId = reporteId,
             senderId = currentUser.uid,
             senderName = currentUser.email ?: "Usuario",
-            senderType = userType,  // ⭐ CAMBIO AQUÍ
+            senderType = userType,
             message = texto,
             timestamp = System.currentTimeMillis()
         )
@@ -150,6 +150,9 @@ class ChatActivity : AppCompatActivity() {
             .setValue(message)
             .addOnSuccessListener {
                 etMensaje.text.clear()
+
+                // ⭐ NUEVO: Enviar notificación al destinatario
+                enviarNotificacionMensaje(reporteId, texto, userType)
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(
@@ -157,6 +160,81 @@ class ChatActivity : AppCompatActivity() {
                     "Error al enviar mensaje: ${exception.message}",
                     Toast.LENGTH_SHORT
                 ).show()
+            }
+    }
+
+    // ⭐ NUEVA FUNCIÓN: Enviar notificación de nuevo mensaje
+    private fun enviarNotificacionMensaje(reporteId: String, mensaje: String, tipoRemitente: String) {
+        // Obtener el reporte para saber quién es el dueño
+        val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+
+        db.collection("reportes").document(reporteId).get()
+            .addOnSuccessListener { document ->
+                val usuarioId = document.getString("usuarioId") ?: return@addOnSuccessListener
+                val titulo = document.getString("titulo") ?: "Nuevo mensaje"
+
+                // Si soy trabajador, notifico al ciudadano. Si soy ciudadano, notifico al trabajador
+                val destinatarioId = if (tipoRemitente == "municipalidad") {
+                    usuarioId  // Notificar al ciudadano dueño del reporte
+                } else {
+                    // Buscar trabajadores de esta categoría
+                    obtenerTrabajadorParaNotificar(document.getString("tipoIncidente") ?: "")
+                    return@addOnSuccessListener
+                }
+
+                // Obtener token FCM del destinatario
+                db.collection("usuarios").document(destinatarioId).get()
+                    .addOnSuccessListener { userDoc ->
+                        val fcmToken = userDoc.getString("fcmToken") ?: return@addOnSuccessListener
+
+                        // Crear notificación
+                        val notificacion = hashMapOf(
+                            "to" to fcmToken,
+                            "notification" to hashMapOf(
+                                "title" to "💬 $titulo",
+                                "body" to mensaje.take(100)
+                            ),
+                            "data" to hashMapOf(
+                                "tipo" to "nuevo_mensaje",
+                                "reporteId" to reporteId,
+                                "titulo" to titulo
+                            )
+                        )
+
+                        // Guardar en Firestore para procesar
+                        db.collection("notificaciones_pendientes").add(notificacion)
+                    }
+            }
+    }
+
+    private fun obtenerTrabajadorParaNotificar(categoria: String) {
+        val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+
+        db.collection("usuarios")
+            .whereEqualTo("tipoUsuario", "trabajador")
+            .limit(1)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!documents.isEmpty) {
+                    val trabajadorId = documents.documents[0].id
+                    val fcmToken = documents.documents[0].getString("fcmToken") ?: return@addOnSuccessListener
+
+                    // Crear notificación para trabajador
+                    val notificacion = hashMapOf(
+                        "to" to fcmToken,
+                        "notification" to hashMapOf(
+                            "title" to "💬 Nuevo mensaje en reporte",
+                            "body" to "Un ciudadano te ha enviado un mensaje"
+                        ),
+                        "data" to hashMapOf(
+                            "tipo" to "nuevo_mensaje",
+                            "reporteId" to reporteId,
+                            "titulo" to reporteTitulo
+                        )
+                    )
+
+                    db.collection("notificaciones_pendientes").add(notificacion)
+                }
             }
     }
 
