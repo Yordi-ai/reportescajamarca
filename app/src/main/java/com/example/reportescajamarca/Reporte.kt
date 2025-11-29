@@ -1,6 +1,5 @@
 package com.example.reportescajamarca
 
-
 data class Reporte(
     var id: String = "",
     val tipoIncidente: String = "",

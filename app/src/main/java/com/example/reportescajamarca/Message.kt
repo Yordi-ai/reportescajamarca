@@ -1,6 +1,5 @@
 package com.example.reportescajamarca
 
-
 data class Message(
     val id: String = "",
     val reporteId: String = "",

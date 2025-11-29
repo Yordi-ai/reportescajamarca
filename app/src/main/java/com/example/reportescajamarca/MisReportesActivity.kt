@@ -1,8 +1,9 @@
 package com.example.reportescajamarca
 
-
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +14,7 @@ class MisReportesActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ReporteAdapter
+    private lateinit var progressBar: ProgressBar
     private val reportes = mutableListOf<Reporte>()
 
     private lateinit var db: FirebaseFirestore
@@ -28,12 +30,13 @@ class MisReportesActivity : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
-        initRecyclerView()
+        initViews()
         cargarReportesConMensajes()
     }
 
-    private fun initRecyclerView() {
+    private fun initViews() {
         recyclerView = findViewById(R.id.recyclerViewReportes)
+        progressBar = findViewById(R.id.progressBar)
 
         adapter = ReporteAdapter(reportes) { reporte ->
             abrirChat(reporte)
@@ -53,17 +56,20 @@ class MisReportesActivity : AppCompatActivity() {
     private fun cargarReportesConMensajes() {
         val currentUser = auth.currentUser ?: return
 
+        progressBar.visibility = View.VISIBLE
+        recyclerView.alpha = 0f  // Invisible mientras carga
+
         db.collection("reportes")
             .whereEqualTo("usuarioId", currentUser.uid)
-            .addSnapshotListener { documents, error ->
-                if (error != null) {
-                    return@addSnapshotListener
-                }
+            .get()
+            .addOnSuccessListener { documents ->
+                progressBar.visibility = View.GONE
 
                 if (documents == null || documents.isEmpty) {
                     reportes.clear()
                     adapter.notifyDataSetChanged()
-                    return@addSnapshotListener
+                    recyclerView.animate().alpha(1f).setDuration(300).start()
+                    return@addOnSuccessListener
                 }
 
                 val nuevosReportes = mutableListOf<Reporte>()
@@ -79,12 +85,19 @@ class MisReportesActivity : AppCompatActivity() {
                 reportes.sortByDescending { it.fecha }
                 adapter.notifyDataSetChanged()
 
+                // Animación suave para aparecer
+                recyclerView.animate().alpha(1f).setDuration(300).start()
+
                 reportes.forEachIndexed { index, reporte ->
                     contarMensajesNoLeidos(reporte.id) { contador ->
                         reportes[index] = reporte.copy(mensajesNoLeidos = contador)
                         adapter.notifyItemChanged(index)
                     }
                 }
+            }
+            .addOnFailureListener { error ->
+                progressBar.visibility = View.GONE
+                recyclerView.animate().alpha(1f).setDuration(300).start()
             }
     }
 
@@ -105,13 +118,23 @@ class MisReportesActivity : AppCompatActivity() {
             }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Solo actualizar badges cuando vuelves de otra pantalla
+        if (reportes.isNotEmpty()) {
+            reportes.forEachIndexed { index, reporte ->
+                contarMensajesNoLeidos(reporte.id) { contador ->
+                    if (reportes[index].mensajesNoLeidos != contador) {
+                        reportes[index] = reporte.copy(mensajesNoLeidos = contador)
+                        adapter.notifyItemChanged(index)
+                    }
+                }
+            }
+        }
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
-    }
-
-    override fun onResume() {
-        super.onResume()
-        cargarReportesConMensajes()
     }
 }

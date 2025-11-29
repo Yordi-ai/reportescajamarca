@@ -10,9 +10,11 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.reportescajamarca.Reporte
 import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 class ReportesTrabajadorAdapter(
     private val reportes: List<Reporte>,

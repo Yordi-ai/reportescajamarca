@@ -1,5 +1,6 @@
 package com.example.reportescajamarca
 
+import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +10,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.reportescajamarca.Reporte
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 class ReporteAdapter(
     private var reportes: List<Reporte>,
@@ -69,7 +72,14 @@ class ReporteAdapter(
             holder.tvBadgeChat.visibility = View.GONE
         }
 
-        // Click en chat
+        // ⭐ Click en Ver Detalles
+        holder.btnVerDetalles.setOnClickListener {
+            val intent = Intent(holder.itemView.context, DetalleReporteActivity::class.java)
+            intent.putExtra("REPORTE_ID", reporte.id)
+            holder.itemView.context.startActivity(intent)
+        }
+
+        // Click en Chat
         holder.btnChat.setOnClickListener {
             onChatClick(reporte)
         }
